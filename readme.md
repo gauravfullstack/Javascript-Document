@@ -1,3 +1,14 @@
+## Table of Contents
+- [What is a Pure Component?](#1-what-is-a-pure-component)
+- [How to Implement PureComponent in Functional Components?](#2-how-to-implement-purecomponent-in-functional-components)
+- [Real-World Example of PureComponent](#real-world-example)
+
+---
+
+
+
+
+
 # What is a Pure Component and How Will You Implement the Same on Functional Components?
 
 ## **1. What is a Pure Component?**
