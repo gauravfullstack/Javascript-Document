@@ -5740,3 +5740,1862 @@ Imagine you're building a **to-do list app**. The DOM allows you to create tasks
 
 
 
+
+
+### **What is `useState` and `useEffect` in React, and How Do They Work?**
+
+---
+
+#### 1. **What is `useState`?**
+
+`useState` is a hook in React that allows functional components to have state. It provides a way to store and manage values like variables within your components. Before hooks were introduced, only class components could have state, but with `useState`, functional components can now have and manage their own state.
+
+##### **Why is it important?**
+
+The `useState` hook is crucial because it enables functional components to be dynamic, meaning they can remember and update data across renders. This makes components more interactive and responsive to user inputs or other events.
+
+#### **Real-World Example:**
+
+Imagine you’re building a button that increments a count every time it’s clicked.
+
+```jsx
+import React, { useState } from 'react';
+
+function Counter() {
+  const [count, setCount] = useState(0); // Initial count is set to 0
+
+  const increment = () => {
+    setCount(count + 1); // Increments the count by 1
+  };
+
+  return (
+    <div>
+      <p>Count: {count}</p>
+      <button onClick={increment}>Increment</button>
+    </div>
+  );
+}
+
+export default Counter;
+```
+
+Here, `useState` is used to store the `count` value, and `setCount` is the function that updates it. Every time you click the button, the `count` state will update, and the component will re-render to reflect the new count.
+
+#### **Key Points:**
+
+- `useState` returns two values: 
+  1. The current state value (e.g., `count`).
+  2. A function to update that state (e.g., `setCount`).
+- You pass an initial value to `useState` (like `0` in the example).
+
+---
+
+#### 2. **What is `useEffect`?**
+
+`useEffect` is a hook in React used to perform side effects in functional components. It’s similar to lifecycle methods (`componentDidMount`, `componentDidUpdate`, `componentWillUnmount`) in class components but works in functional components.
+
+##### **Why is it important?**
+
+`useEffect` is essential for operations that interact with external systems or need to be run after rendering. This could include fetching data from an API, updating the document title, or subscribing to events like window resizing.
+
+#### **Real-World Example:**
+
+Let’s say we want to fetch a list of users from an API when the component mounts and display it:
+
+```jsx
+import React, { useState, useEffect } from 'react';
+
+function UserList() {
+  const [users, setUsers] = useState([]);
+  
+  useEffect(() => {
+    // This effect will run once after the component mounts
+    fetch('https://jsonplaceholder.typicode.com/users')
+      .then(response => response.json())
+      .then(data => setUsers(data));
+  }, []); // Empty array means the effect runs only once when the component mounts
+
+  return (
+    <div>
+      <h1>User List</h1>
+      <ul>
+        {users.map(user => (
+          <li key={user.id}>{user.name}</li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+export default UserList;
+```
+
+#### **Key Points:**
+
+- `useEffect` accepts two arguments:
+  1. A function that contains your side-effect logic (e.g., fetching data).
+  2. An optional dependency array (`[]`).
+- The effect runs after the component mounts or when any of the dependencies change.
+
+---
+
+#### 3. **When Does `useEffect` Run?**
+
+The effect runs after the component renders. But it can be controlled based on the dependencies you pass in the second argument (the dependency array).
+
+1. **Without Dependencies:**
+   If you don’t provide the second argument, the effect will run **after every render** (similar to `componentDidUpdate` in class components).
+
+   ```jsx
+   useEffect(() => {
+     console.log('Effect runs after every render');
+   });
+   ```
+
+2. **With an Empty Array `[]`:**
+   If you pass an empty array, the effect runs **only once**, similar to `componentDidMount` in class components (this happens when the component mounts for the first time).
+
+   ```jsx
+   useEffect(() => {
+     console.log('Effect runs only once on mount');
+   }, []);
+   ```
+
+3. **With Dependencies:**
+   If you pass a dependency array with specific values, the effect will only run when those specific values change. This is like saying, “run the effect when a particular prop or state changes.”
+
+   ```jsx
+   useEffect(() => {
+     console.log('Effect runs when "count" changes');
+   }, [count]); // Only runs when count changes
+   ```
+
+---
+
+#### 4. **Combining `useState` and `useEffect`**
+
+When you combine `useState` and `useEffect`, you can create more dynamic components. For example, you can trigger state changes based on API responses or events.
+
+#### **Example Scenario:**
+
+Imagine you have a "loading" spinner that should be shown while fetching data. You can use `useState` to track the loading state, and `useEffect` to fetch the data and update the loading state.
+
+```jsx
+import React, { useState, useEffect } from 'react';
+
+function DataFetcher() {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch('https://jsonplaceholder.typicode.com/posts')
+      .then(response => response.json())
+      .then(data => {
+        setData(data);
+        setLoading(false); // Set loading to false when data is fetched
+      });
+  }, []); // Run the effect once when the component mounts
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  return (
+    <div>
+      <h1>Fetched Data</h1>
+      <ul>
+        {data.map(item => (
+          <li key={item.id}>{item.title}</li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+export default DataFetcher;
+```
+
+---
+
+#### 5. **Principles of `useState` and `useEffect`**
+
+1. **State Persistence:** 
+   - `useState` keeps the state across renders, allowing the component to "remember" its values.
+   
+2. **Reactivity:** 
+   - Both `useState` and `useEffect` work together to create reactive behavior in the app. `useEffect` can trigger changes in state that cause the component to re-render.
+
+3. **Optimization:** 
+   - `useEffect` allows you to avoid unnecessary operations by controlling when the side effects occur (using dependencies). 
+
+---
+
+#### **💡 Interview Tip:**
+
+- Make sure to demonstrate a solid understanding of how side effects work, especially when it comes to fetching data, handling asynchronous operations, or cleaning up resources. `useEffect` plays a crucial role in controlling when and how these side effects run.
+- Also, ensure you explain **dependency arrays** clearly because it’s a common area where candidates tend to miss important details, leading to unnecessary re-renders or missed updates.
+
+---
+
+### **Summary:**
+
+- `useState`: Allows functional components to store and manage state.
+- `useEffect`: Runs side effects (e.g., data fetching, DOM manipulations) in functional components.
+- **Combining them** enables you to create dynamic, interactive React apps with side effects that respond to state changes.
+
+
+
+
+
+### **What is `useRef` in React, and How Does It Work for DOM Manipulation and Data Persistence?**
+
+---
+
+#### 1. **What is `useRef`?**
+
+`useRef` is a React hook that is primarily used for accessing DOM elements directly, but it also serves another purpose: it can persist data between renders without causing re-renders. It can be seen as a way to **reference** or **hold** values that do not affect the rendering flow of the component.
+
+##### **Why is it important?**
+
+- **DOM Manipulation:** Sometimes, you need to interact with the DOM directly, like focusing an input field, measuring an element's dimensions, or playing a video. `useRef` provides a way to do this without triggering unnecessary re-renders.
+- **Persistence of Data:** `useRef` allows you to store mutable values that **do not** trigger re-renders when they change, making it useful for storing values that need to persist between renders but shouldn't directly affect the UI.
+
+---
+
+#### 2. **Using `useRef` for DOM Manipulation**
+
+In React, while most DOM interactions are abstracted away and managed declaratively (e.g., using state and props), there are situations where you might need to directly interact with the DOM. For example, focusing an input field when the component first renders.
+
+##### **Real-World Example:**
+
+Let’s say you want to focus on an input field automatically when the component mounts.
+
+```jsx
+import React, { useEffect, useRef } from 'react';
+
+function FocusInput() {
+  const inputRef = useRef(null); // Create a ref
+
+  useEffect(() => {
+    inputRef.current.focus(); // Focus the input element when the component mounts
+  }, []);
+
+  return <input ref={inputRef} type="text" placeholder="Focus me on load" />;
+}
+
+export default FocusInput;
+```
+
+#### **How it works:**
+- `useRef(null)` creates a reference (`inputRef`) and initializes it with `null`.
+- The `inputRef.current` points to the DOM element after the component renders.
+- When `inputRef.current.focus()` is called inside `useEffect`, it focuses the input field.
+
+This interaction with the DOM happens without causing a re-render, making it much more efficient compared to using state or props for DOM manipulation.
+
+---
+
+#### 3. **Using `useRef` for Data Persistence**
+
+Another powerful feature of `useRef` is its ability to **persist data** across renders without triggering re-renders when the value changes. This is useful for storing values like previous states, timers, or mutable data that you don’t need to re-render your component for.
+
+##### **Real-World Example:**
+
+Imagine you’re building a timer that tracks how much time has passed in a component, but you don’t want the component to re-render every time the timer updates.
+
+```jsx
+import React, { useState, useEffect, useRef } from 'react';
+
+function Timer() {
+  const [seconds, setSeconds] = useState(0);
+  const intervalRef = useRef(null); // Ref to store interval ID
+
+  useEffect(() => {
+    intervalRef.current = setInterval(() => {
+      setSeconds(prev => prev + 1); // Update the state every second
+    }, 1000);
+
+    return () => clearInterval(intervalRef.current); // Cleanup interval on component unmount
+  }, []);
+
+  return <div>Timer: {seconds}s</div>;
+}
+
+export default Timer;
+```
+
+#### **How it works:**
+- `intervalRef` is used to store the interval ID, and this reference is persistent across re-renders.
+- The interval that updates the `seconds` state is set inside `useEffect`, but the reference (`intervalRef.current`) does not trigger any re-renders when updated.
+- The timer continues to work without causing unnecessary component re-renders.
+
+---
+
+#### 4. **When to Use `useRef`?**
+
+Here are a few scenarios where `useRef` is useful:
+
+1. **Accessing DOM Elements:**
+   - For example, focusing an input field, measuring an element's dimensions, or interacting with canvas or video elements.
+   
+2. **Persisting Data Without Re-renders:**
+   - Storing mutable values (e.g., tracking the previous state, storing an interval ID, or holding a value that doesn't affect the UI).
+   
+3. **Managing Timers or Intervals:**
+   - Storing an interval ID so you can clear it when the component unmounts or when it's no longer needed.
+
+4. **Avoiding Re-renders for Mutable References:**
+   - When you need a reference to a value that should persist between renders but does not require a re-render when it changes.
+
+---
+
+#### 5. **Key Points of `useRef`:**
+
+- **Does not trigger re-renders:** Unlike `useState`, changing the value of `useRef` will not cause the component to re-render. This makes it an efficient way to store data that you don't want to trigger re-renders.
+- **Mutable:** The `current` property of `useRef` is mutable, which means it can be changed without affecting the component's rendering behavior.
+- **Used for accessing DOM elements and mutable data:** While `useState` is for UI state and `useEffect` for side effects, `useRef` is used for direct DOM manipulations and maintaining values that persist across renders.
+
+---
+
+#### 6. **Principles of `useRef`:**
+
+1. **Efficiency:** 
+   - `useRef` allows you to hold references or mutable values without causing re-renders, making it more efficient than state for certain use cases.
+
+2. **Direct DOM Manipulation:** 
+   - It gives you direct access to DOM elements, enabling you to perform imperative actions like focusing, measuring, or scrolling.
+
+3. **Persistent Data:** 
+   - `useRef` is useful for storing data across renders, especially when you need to keep track of something like a previous value, timeout ID, or interval.
+
+---
+
+#### **💡 Interview Tip:**
+
+- **Be clear about when to use `useRef` vs. `useState`:**
+  - Use `useRef` when you need to persist data without causing re-renders or when you need direct DOM manipulation.
+  - Use `useState` when you need to store UI-related data that, when updated, should trigger a re-render of the component.
+
+- **Explain the role of `current` property in `useRef`:**
+  - The `current` property of the ref is where the DOM element (or any mutable value) is stored. Be sure to mention that you directly modify `current` but avoid modifying the ref itself.
+
+---
+
+### **Summary:**
+
+- **`useRef`** is a hook that provides a way to persist data between renders and interact directly with the DOM.
+- **DOM Manipulation:** Allows you to access DOM elements directly (e.g., focusing an input).
+- **Persistence of Data:** Allows you to store mutable data that won’t trigger re-renders (e.g., storing interval IDs or previous values).
+  
+By using `useRef`, you can optimize components for performance, manage side effects efficiently, and access elements in a straightforward manner without unnecessary re-renders.
+
+
+
+
+
+### **What is `useMemo` in React, and How Does It Help in Avoiding Unnecessary Computations?**
+
+---
+
+#### 1. **What is `useMemo`?**
+
+`useMemo` is a React hook that helps **optimize performance** by memoizing the result of a function and recalculating it **only when necessary**. In other words, it helps avoid expensive recalculations on every render by remembering the computed result until one of its dependencies changes.
+
+##### **Why is it important?**
+
+In React applications, components often re-render when state or props change. If your component has expensive calculations or operations, rerunning those computations on every render can be inefficient. `useMemo` ensures that these calculations are only performed when the **dependencies** (like state or props) change, improving performance.
+
+#### **Real-World Example:**
+
+Imagine you’re building an application that displays a list of products with their prices, and you need to calculate a total price based on some complex logic.
+
+Without `useMemo`, the total price would be recalculated on every render, even if nothing has changed.
+
+```jsx
+import React, { useState } from 'react';
+
+function ProductList({ products }) {
+  const [discount, setDiscount] = useState(0);
+
+  // Expensive calculation (could be slow if products are large)
+  const totalPrice = products.reduce((acc, product) => acc + product.price, 0) * (1 - discount);
+
+  return (
+    <div>
+      <h1>Product List</h1>
+      <ul>
+        {products.map(product => (
+          <li key={product.id}>{product.name} - ${product.price}</li>
+        ))}
+      </ul>
+      <p>Total Price: ${totalPrice}</p>
+      <button onClick={() => setDiscount(prev => prev + 0.05)}>Increase Discount</button>
+    </div>
+  );
+}
+
+export default ProductList;
+```
+
+Every time you click the "Increase Discount" button, the entire `totalPrice` calculation happens again, even though the products haven’t changed.
+
+---
+
+#### 2. **Using `useMemo` to Optimize the `totalPrice` Calculation**
+
+You can use `useMemo` to prevent unnecessary recalculations of `totalPrice` unless the `products` array or `discount` changes.
+
+```jsx
+import React, { useState, useMemo } from 'react';
+
+function ProductList({ products }) {
+  const [discount, setDiscount] = useState(0);
+
+  // Memoize totalPrice calculation to avoid unnecessary recalculations
+  const totalPrice = useMemo(() => {
+    return products.reduce((acc, product) => acc + product.price, 0) * (1 - discount);
+  }, [products, discount]); // Only re-compute when products or discount change
+
+  return (
+    <div>
+      <h1>Product List</h1>
+      <ul>
+        {products.map(product => (
+          <li key={product.id}>{product.name} - ${product.price}</li>
+        ))}
+      </ul>
+      <p>Total Price: ${totalPrice}</p>
+      <button onClick={() => setDiscount(prev => prev + 0.05)}>Increase Discount</button>
+    </div>
+  );
+}
+
+export default ProductList;
+```
+
+#### **How it works:**
+- **`useMemo`** stores the result of the calculation and reuses it until either the `products` array or `discount` state changes.
+- This prevents recalculating the `totalPrice` on every render, which is especially useful when the `products` list is long or the calculation is complex.
+
+---
+
+#### 3. **When Should You Use `useMemo`?**
+
+You should use `useMemo` when:
+- **Expensive computations:** The function you’re using for calculations or data processing is expensive and would benefit from memoization.
+- **Stable outputs:** The result of the function doesn’t change unless the input (dependencies) changes.
+- **Avoiding unnecessary re-renders:** The memoized value can be reused unless the dependencies (inputs) change, improving performance by preventing unnecessary recalculations.
+
+#### **Real-World Example:**
+
+Imagine you're building a data visualization app where you need to filter a list of items and calculate stats based on the filtered list. Without `useMemo`, the expensive filtering and calculation process would happen every time the user interacts with the app.
+
+```jsx
+import React, { useState, useMemo } from 'react';
+
+function DataVisualizer({ data }) {
+  const [filter, setFilter] = useState('');
+
+  // Memoize the filtered data so it doesn't recalculate on every render
+  const filteredData = useMemo(() => {
+    return data.filter(item => item.name.includes(filter));
+  }, [data, filter]); // Only re-compute when "data" or "filter" changes
+
+  return (
+    <div>
+      <input 
+        type="text" 
+        value={filter} 
+        onChange={e => setFilter(e.target.value)} 
+        placeholder="Filter items"
+      />
+      <ul>
+        {filteredData.map(item => (
+          <li key={item.id}>{item.name}</li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+export default DataVisualizer;
+```
+
+Here, the list of filtered items is **memoized**, meaning it will only recalculate when the `data` or `filter` changes. This is much more efficient than recalculating the filtered list every time the component renders.
+
+---
+
+#### 4. **Principles of `useMemo`:**
+
+1. **Memoization for performance:**
+   - `useMemo` stores the result of a function and only recomputes it when necessary. This avoids re-running expensive functions on every render.
+   
+2. **Dependencies:**
+   - The dependencies array controls when `useMemo` recalculates the memoized value. If the values in the dependencies array change, `useMemo` will recalculate the result; otherwise, it returns the memoized value from the previous render.
+   
+3. **Avoid unnecessary `useMemo`:**
+   - It’s important to remember that `useMemo` should only be used for performance optimization. If the function you're memoizing is not computationally expensive, adding `useMemo` can actually slow down your app due to the overhead of tracking dependencies.
+
+---
+
+#### 5. **When NOT to Use `useMemo`:**
+
+1. **Inexpensive computations:** 
+   If the function you’re memoizing is not computationally expensive, using `useMemo` can be overkill. It adds unnecessary complexity without providing real performance benefits.
+   
+2. **Frequent re-renders with the same input:**
+   If your component frequently re-renders and the inputs (dependencies) to the function don’t change much, memoization won’t help because React will constantly invalidate the memoized value.
+
+#### **Example:**
+
+If you're rendering a simple list of items with no filtering or sorting logic, memoizing the rendering of that list is unnecessary:
+
+```jsx
+import React, { useMemo } from 'react';
+
+function SimpleList({ items }) {
+  const itemList = useMemo(() => items.map(item => <li key={item.id}>{item.name}</li>), [items]);
+
+  return <ul>{itemList}</ul>;
+}
+```
+
+This is **not recommended**, as the list mapping isn’t an expensive operation, and `useMemo` adds unnecessary overhead.
+
+---
+
+#### **💡 Interview Tip:**
+
+- Make sure to explain **when to use `useMemo`**: Mention that it’s ideal for avoiding expensive calculations in cases where the inputs don’t change frequently.
+- Demonstrate **how `useMemo` helps with complex calculations** in real-world scenarios, like filtering large datasets or handling complex UI components, to showcase your understanding.
+- Be clear about **dependencies**: Always clarify that `useMemo` recalculates the value only when its dependencies change, helping to prevent unnecessary work.
+
+---
+
+### **Summary:**
+
+- **`useMemo`** is a hook in React that **memoizes** expensive calculations, allowing you to avoid unnecessary recalculations on every render.
+- It optimizes performance by ensuring that values are recomputed **only when necessary** (i.e., when their dependencies change).
+- **When to use it:** Ideal for cases where a function is computationally expensive and its results are stable unless the input changes.
+
+By using `useMemo`, you can **optimize your components** for better performance, especially in data-heavy applications or where expensive calculations are needed.
+
+
+
+
+
+### **What is `useCallback` in React, and How Does It Help in Preventing Re-Creation of Functions?**
+
+---
+
+#### 1. **What is `useCallback`?**
+
+`useCallback` is a React hook that returns a **memoized version of a callback function**. It ensures that the function reference remains stable between renders, preventing it from being recreated every time the component re-renders, unless its dependencies change.
+
+##### **Why is it important?**
+
+In React, when a component re-renders, **all functions defined inside** that component are recreated on each render. This is typically not an issue for performance unless the function is passed down as a prop to child components or used in an effect. In such cases, re-creating the function can cause **unnecessary re-renders** of child components or trigger unnecessary effect executions.
+
+`useCallback` helps to optimize performance by preventing the function from being redefined unless its dependencies change.
+
+---
+
+#### 2. **How Does `useCallback` Work?**
+
+`useCallback(fn, deps)` returns a **memoized version** of the function `fn`, which only changes if one of the values in the `deps` array changes. This way, the function will not be recreated on every render unless its dependencies have changed.
+
+##### **Real-World Example:**
+
+Imagine you have a parent component with a function that updates a state. This function is passed as a prop to a child component. If you don’t use `useCallback`, the function will be re-created on each render, potentially causing the child component to re-render unnecessarily.
+
+```jsx
+import React, { useState } from 'react';
+import Child from './Child';
+
+function Parent() {
+  const [count, setCount] = useState(0);
+
+  // This function gets recreated every time Parent re-renders
+  const handleClick = () => {
+    setCount(count + 1);
+  };
+
+  return (
+    <div>
+      <button onClick={handleClick}>Increment Count</button>
+      <Child onClick={handleClick} />
+      <p>Count: {count}</p>
+    </div>
+  );
+}
+
+export default Parent;
+```
+
+In this example, every time the `Parent` component re-renders, the `handleClick` function is redefined, which will cause the `Child` component to re-render unnecessarily. 
+
+---
+
+#### 3. **Optimizing with `useCallback`**
+
+You can optimize the `Parent` component by using `useCallback` to memoize the `handleClick` function. This way, the function reference remains the same between renders unless the `count` state changes.
+
+```jsx
+import React, { useState, useCallback } from 'react';
+import Child from './Child';
+
+function Parent() {
+  const [count, setCount] = useState(0);
+
+  // Memoize the handleClick function to avoid re-creation
+  const handleClick = useCallback(() => {
+    setCount(count + 1);
+  }, [count]); // Dependencies array: function only changes when "count" changes
+
+  return (
+    <div>
+      <button onClick={handleClick}>Increment Count</button>
+      <Child onClick={handleClick} />
+      <p>Count: {count}</p>
+    </div>
+  );
+}
+
+export default Parent;
+```
+
+#### **How it works:**
+- `useCallback` is used to wrap the `handleClick` function.
+- The function will only be recreated if the `count` state changes.
+- This ensures that `Child` only re-renders when necessary (i.e., when the `onClick` function actually changes).
+
+---
+
+#### 4. **Why is `useCallback` Useful?**
+
+`useCallback` is most useful when:
+- **Passing functions to child components**: If you pass a function to a child component and that function doesn’t change, re-creating the function on every render of the parent could cause the child to re-render unnecessarily.
+- **Dependency arrays in `useEffect` or `useMemo`**: If a function is used in the dependency array of `useEffect` or `useMemo`, its reference changes on every render unless memoized. This could lead to unnecessary side effects or recalculations.
+- **Avoiding unnecessary computations**: Preventing the creation of new function references can be important when optimizing larger React applications, especially with deeply nested child components.
+
+---
+
+#### 5. **When to Use `useCallback`?**
+
+You should consider using `useCallback` when:
+1. **You pass functions as props to child components** that depend on the function reference remaining stable (e.g., to avoid unnecessary re-renders).
+2. **The function is used as a dependency in `useEffect` or `useMemo`**, and you want to prevent it from triggering unnecessary re-executions of effects or recalculations.
+3. **Performance optimization** is a concern, especially when the functions are complex or involved in a large app with many components.
+
+#### **Real-World Example:**
+
+Imagine you're building a task manager, where you have a parent component that passes a function to child components for updating task details.
+
+```jsx
+import React, { useState, useCallback } from 'react';
+import Task from './Task';
+
+function TaskManager() {
+  const [tasks, setTasks] = useState([
+    { id: 1, name: 'Task 1', completed: false },
+    { id: 2, name: 'Task 2', completed: false },
+  ]);
+
+  // Memoize the function to update task completion
+  const toggleTaskCompletion = useCallback(
+    (id) => {
+      setTasks(prevTasks =>
+        prevTasks.map(task =>
+          task.id === id ? { ...task, completed: !task.completed } : task
+        )
+      );
+    },
+    [] // No dependencies means it won't change unless explicitly changed
+  );
+
+  return (
+    <div>
+      {tasks.map(task => (
+        <Task key={task.id} task={task} onToggleCompletion={toggleTaskCompletion} />
+      ))}
+    </div>
+  );
+}
+
+export default TaskManager;
+```
+
+In this example:
+- `toggleTaskCompletion` is passed to the `Task` child component.
+- By using `useCallback`, `toggleTaskCompletion` doesn’t get recreated on every render of `TaskManager`, avoiding unnecessary re-renders of the `Task` component unless the function’s dependencies change.
+
+---
+
+#### 6. **Principles of `useCallback`:**
+
+1. **Memoizing Functions**:
+   - `useCallback` **memoizes** the function, returning the same function reference on each render unless dependencies change.
+   
+2. **Preventing Re-Renders**:
+   - When functions are passed to child components, using `useCallback` prevents unnecessary re-renders of those child components by ensuring that the function reference doesn't change on every render.
+
+3. **Dependencies Array**:
+   - Just like `useEffect` and `useMemo`, `useCallback` takes a dependencies array that controls when the function should be recomputed. If the values in the array change, the function will be recreated.
+
+---
+
+#### 7. **When NOT to Use `useCallback`:**
+
+- **Simple functions** that are not passed as props or used in effects: If you are simply defining functions within a component that aren’t passed down or used in effects, using `useCallback` won’t provide significant benefits.
+- **Over-optimization:** Don’t use `useCallback` prematurely for performance optimization. Only use it when you notice actual performance bottlenecks due to frequent function re-creations.
+
+#### **Example:**
+
+If your function doesn't affect re-renders or performance, using `useCallback` can be overkill:
+
+```jsx
+const handleChange = (e) => {
+  setValue(e.target.value);
+};
+
+return <input onChange={handleChange} />;
+```
+
+In this case, there’s no need to use `useCallback` since the function isn’t passed down or used as a dependency elsewhere.
+
+---
+
+#### **💡 Interview Tip:**
+
+- **Be specific about use cases:** Mention that `useCallback` is primarily useful for **memoizing callback functions** passed to child components, and preventing unnecessary re-renders in deeply nested components.
+- **Explain performance considerations:** Emphasize that `useCallback` should be used for **performance optimization** but should not be overused in every scenario, especially for simple, non-complex functions.
+- **Understand the dependencies:** Make sure to explain how the dependencies array works in `useCallback`, and why it is important to only memoize functions when their dependencies change.
+
+---
+
+### **Summary:**
+
+- **`useCallback`** is a hook that returns a **memoized version** of a callback function, preventing it from being re-created on every render unless its dependencies change.
+- It optimizes performance by ensuring that functions passed to child components or used in `useEffect` or `useMemo` do not cause unnecessary re-renders.
+- **Use `useCallback`** when you need to **memoize functions**, especially if they are passed as props to child components or used as dependencies in other hooks.
+
+By using `useCallback`, you can **prevent unnecessary computations** and ensure **optimal performance** in your React applications, especially when working with large or complex component trees.
+
+
+
+
+
+
+
+### **What is `useReducer` in React and How is it Used for Managing Complex State Logic?**
+
+---
+
+#### 1. **What is `useReducer`?**
+
+`useReducer` is a React hook that is primarily used for managing complex state logic. It is similar to `useState`, but it is more powerful when dealing with state transitions that involve more complex logic or when state depends on previous values.
+
+In `useReducer`, state updates are handled by **dispatching actions** to a reducer function, which returns a new state based on the current state and the action. This is similar to how state management is done in Redux, but it is built-in to React and local to a component.
+
+##### **Why is it important?**
+
+`useReducer` is essential when:
+- You need to handle **complex state logic** (e.g., multiple state variables that depend on each other or need to be updated in different ways).
+- You need to **perform actions** that modify the state in a predictable manner, like in form handling or state transitions.
+- You want to **avoid the multiple useState calls** that become harder to manage as your state grows in complexity.
+
+---
+
+#### 2. **How Does `useReducer` Work?**
+
+The `useReducer` hook takes two parameters:
+1. **The reducer function** – A function that receives the current state and an action, and returns a new state.
+2. **The initial state** – The starting value of the state.
+
+The hook returns:
+- The current state value.
+- A `dispatch` function that is used to send actions to the reducer.
+
+##### **Syntax:**
+```javascript
+const [state, dispatch] = useReducer(reducer, initialState);
+```
+
+- **`reducer`**: A function that defines how the state is updated based on the action.
+- **`initialState`**: The initial value of the state.
+- **`state`**: The current state.
+- **`dispatch`**: A function that is used to dispatch actions to the reducer.
+
+---
+
+#### 3. **Real-World Example:**
+
+Let’s consider a scenario where we want to manage a **counter**. Instead of using `useState`, we’ll use `useReducer` to handle the state more predictably.
+
+##### **Step 1: Define the Reducer Function**
+
+The reducer function determines how the state should change based on the **action**.
+
+```javascript
+const counterReducer = (state, action) => {
+  switch (action.type) {
+    case 'increment':
+      return { count: state.count + 1 };
+    case 'decrement':
+      return { count: state.count - 1 };
+    default:
+      return state;
+  }
+};
+```
+
+##### **Step 2: Using `useReducer` in a Component**
+
+Here’s how we can use `useReducer` to manage the state in a component:
+
+```javascript
+import React, { useReducer } from 'react';
+
+function Counter() {
+  const initialState = { count: 0 };
+
+  const [state, dispatch] = useReducer(counterReducer, initialState);
+
+  return (
+    <div>
+      <p>Count: {state.count}</p>
+      <button onClick={() => dispatch({ type: 'increment' })}>Increment</button>
+      <button onClick={() => dispatch({ type: 'decrement' })}>Decrement</button>
+    </div>
+  );
+}
+
+export default Counter;
+```
+
+##### **How it works:**
+- The `counterReducer` function takes the current `state` and an `action`, and returns a new state based on the `action.type` (either `increment` or `decrement`).
+- We call `dispatch({ type: 'increment' })` or `dispatch({ type: 'decrement' })` to trigger the state change.
+
+---
+
+#### 4. **When to Use `useReducer`?**
+
+`useReducer` is ideal when:
+- **State transitions are complex**: If the state logic involves multiple sub-values or needs to be updated in different ways, `useReducer` provides a cleaner, more scalable solution.
+- **Managing related state**: When the state values are interdependent (e.g., in a form where multiple fields might interact), `useReducer` can manage it more predictably.
+- **Avoiding props drilling in complex states**: It can be used to manage local state without needing to lift it to parent components, especially if the state changes are complex.
+
+##### **Real-World Example – A Todo List:**
+
+Imagine you’re building a todo list app, and you want to manage the list of tasks, along with actions like adding and removing tasks.
+
+```javascript
+import React, { useReducer } from 'react';
+
+const todoReducer = (state, action) => {
+  switch (action.type) {
+    case 'add':
+      return { tasks: [...state.tasks, action.payload] };
+    case 'remove':
+      return { tasks: state.tasks.filter(task => task.id !== action.payload) };
+    case 'toggle':
+      return {
+        tasks: state.tasks.map(task =>
+          task.id === action.payload
+            ? { ...task, completed: !task.completed }
+            : task
+        ),
+      };
+    default:
+      return state;
+  }
+};
+
+function TodoApp() {
+  const initialState = { tasks: [] };
+  const [state, dispatch] = useReducer(todoReducer, initialState);
+
+  const addTask = (task) => {
+    dispatch({ type: 'add', payload: task });
+  };
+
+  const removeTask = (id) => {
+    dispatch({ type: 'remove', payload: id });
+  };
+
+  const toggleTask = (id) => {
+    dispatch({ type: 'toggle', payload: id });
+  };
+
+  return (
+    <div>
+      <h1>Todo List</h1>
+      <button onClick={() => addTask({ id: Date.now(), text: 'New Task', completed: false })}>
+        Add Task
+      </button>
+      <ul>
+        {state.tasks.map((task) => (
+          <li key={task.id}>
+            <span style={{ textDecoration: task.completed ? 'line-through' : 'none' }}>
+              {task.text}
+            </span>
+            <button onClick={() => toggleTask(task.id)}>Toggle</button>
+            <button onClick={() => removeTask(task.id)}>Remove</button>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+export default TodoApp;
+```
+
+##### **How it works:**
+- The `todoReducer` handles actions like `add`, `remove`, and `toggle`.
+- The `dispatch` function is used to send actions, which then update the state accordingly.
+- The app displays the list of tasks and allows you to add, remove, or toggle the completion state of each task.
+
+---
+
+#### 5. **Why Use `useReducer` Over `useState`?**
+
+`useReducer` provides several advantages over `useState`:
+- **Centralized state logic**: The reducer function centralizes all state changes in one place, making the code more maintainable, especially as state logic becomes more complex.
+- **Predictable state changes**: Since actions are explicit and the reducer is pure (no side effects), the state updates are predictable.
+- **Improved performance in complex state scenarios**: With `useReducer`, managing complex state transitions becomes easier, especially when you need to manage interdependent states or trigger multiple state changes at once.
+
+---
+
+#### 6. **When to Avoid `useReducer`?**
+
+Avoid `useReducer` when:
+- **The state is simple**: If the state logic is straightforward (like toggling a boolean or updating a single value), `useState` is simpler and more appropriate.
+- **Performance is not an issue**: For very simple state updates, `useReducer` might add unnecessary complexity.
+
+---
+
+#### 7. **Principles of `useReducer`:**
+
+1. **Actions and Reducers**:
+   - **Actions** are dispatched to the reducer with a `type` and optional `payload`.
+   - **Reducer** is a function that handles the action types and updates the state accordingly.
+
+2. **Single Responsibility**:
+   - Each reducer function should be focused on a single responsibility (handling state updates for one part of the state).
+
+3. **Predictable State Transitions**:
+   - State transitions should be predictable and immutable. Reducers should return new states, not modify the existing one.
+
+4. **Initial State**:
+   - Always define an initial state value to avoid unexpected behavior when the component first renders.
+
+---
+
+### **💡 Interview Tip:**
+
+- **Emphasize the scalability**: When discussing `useReducer`, emphasize how it is useful for managing complex states and scenarios where multiple state changes need to be triggered based on different actions. For example, forms, lists, or apps with deeply nested data can benefit from `useReducer`.
+- **Compare with `useState`**: Make sure to clarify when `useReducer` is more appropriate than `useState`, especially for handling complex state changes.
+- **Use clear examples**: Using examples like a counter or todo list helps illustrate the practical use of `useReducer` effectively.
+
+---
+
+### **Summary:**
+
+- **`useReducer`** is ideal for managing complex state logic that involves multiple state variables or requires predictable state transitions based on different actions.
+- It centralizes the state management and reduces the complexity of handling state in large components.
+- Use it when you need to handle multiple state changes that depend on different conditions or actions, like in a todo list, form management, or state transitions in an app.
+
+With `useReducer`, React provides a structured way to manage state, ensuring that your application remains scalable and maintainable even as state logic becomes more complicated.
+
+
+
+
+
+
+### **What is `useContext` in React and How Does It Help in Sharing Global State with Context API?**
+
+---
+
+#### 1. **What is `useContext`?**
+
+`useContext` is a React hook that allows you to **consume** the context values that have been provided by a `Context.Provider` in a React component tree. It provides an easy way to access global state or values that are shared across multiple components without the need for passing props down manually at each level.
+
+The **Context API** enables the sharing of values like authentication status, user settings, or theme preferences globally throughout the application, and `useContext` simplifies the consumption of that data.
+
+##### **Why is it important?**
+
+The **Context API** solves the problem of **prop drilling**, which occurs when you need to pass props down through many layers of components just to access certain data at a deeper level. With `useContext`, you can access shared values directly from any component, making the code cleaner and easier to maintain.
+
+---
+
+#### 2. **How Does `useContext` Work?**
+
+To use `useContext`, you need to follow these basic steps:
+
+1. **Create a Context**: Use `React.createContext()` to create a context object. This will hold the value you want to share.
+2. **Provide a Context**: Use a `Context.Provider` to wrap your component tree and provide the context value to all nested components.
+3. **Consume a Context**: Use the `useContext` hook in any component to access the current value of the context.
+
+##### **Syntax:**
+
+```javascript
+import React, { useContext } from 'react';
+
+// Create a Context
+const MyContext = React.createContext();
+
+// A component that provides the context value
+function MyProvider({ children }) {
+  const value = 'Hello, World!'; // Any value to be shared globally
+  return <MyContext.Provider value={value}>{children}</MyContext.Provider>;
+}
+
+// A component that consumes the context value
+function MyComponent() {
+  const contextValue = useContext(MyContext);
+  return <div>{contextValue}</div>;
+}
+
+export default function App() {
+  return (
+    <MyProvider>
+      <MyComponent />
+    </MyProvider>
+  );
+}
+```
+
+In this example, `MyComponent` consumes the value provided by `MyProvider` using `useContext`.
+
+---
+
+#### 3. **Real-World Example: Sharing User Authentication Status**
+
+Let's say you're building an app where you need to manage the user's authentication status globally (whether the user is logged in or not) and make that status accessible across different components. Instead of passing the authentication status via props, we can use `useContext`.
+
+##### **Step 1: Create a Context for Authentication**
+
+```javascript
+import React, { createContext, useState, useContext } from 'react';
+
+// Create the AuthContext
+const AuthContext = createContext();
+
+export const useAuth = () => useContext(AuthContext);
+
+// A component to provide the Auth context value
+export const AuthProvider = ({ children }) => {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  const login = () => setIsAuthenticated(true);
+  const logout = () => setIsAuthenticated(false);
+
+  return (
+    <AuthContext.Provider value={{ isAuthenticated, login, logout }}>
+      {children}
+    </AuthContext.Provider>
+  );
+};
+```
+
+Here, `AuthContext` holds the authentication status and provides `login` and `logout` methods.
+
+##### **Step 2: Use `useContext` in Different Components**
+
+Now, you can consume the authentication state in any component using the `useAuth` hook, which simplifies the access to the `AuthContext`.
+
+```javascript
+import React from 'react';
+import { useAuth } from './AuthContext'; // Importing the custom hook
+
+const LoginButton = () => {
+  const { login } = useAuth();
+  return <button onClick={login}>Login</button>;
+};
+
+const LogoutButton = () => {
+  const { logout } = useAuth();
+  return <button onClick={logout}>Logout</button>;
+};
+
+const UserStatus = () => {
+  const { isAuthenticated } = useAuth();
+  return (
+    <div>
+      {isAuthenticated ? 'You are logged in!' : 'You are not logged in.'}
+    </div>
+  );
+};
+
+function App() {
+  return (
+    <AuthProvider>
+      <UserStatus />
+      <LoginButton />
+      <LogoutButton />
+    </AuthProvider>
+  );
+}
+
+export default App;
+```
+
+##### **How it works:**
+- The `AuthProvider` wraps the entire component tree and provides the `isAuthenticated`, `login`, and `logout` values.
+- The `useAuth` hook is used inside any component (like `LoginButton`, `LogoutButton`, or `UserStatus`) to easily access or update the authentication status.
+- The `UserStatus` component dynamically updates when the authentication state changes without needing to pass props manually.
+
+---
+
+#### 4. **When to Use `useContext`?**
+
+`useContext` is ideal when:
+- **You need to share data globally**: It is perfect for sharing values like themes, language settings, user authentication status, etc.
+- **Avoiding prop drilling**: When you need to pass the same data to many components at different levels, `useContext` simplifies the process.
+- **Global state management**: For simple state management tasks (without needing to set up Redux or other libraries), `useContext` can be used to manage global states effectively.
+
+##### **Real-World Example – Theme Switching:**
+
+Imagine you're building a web app where users can toggle between a dark and light theme. You can use `useContext` to share the current theme across all components.
+
+```javascript
+import React, { createContext, useState, useContext } from 'react';
+
+// Create a Context for the theme
+const ThemeContext = createContext();
+
+export const useTheme = () => useContext(ThemeContext);
+
+// A component that provides the theme context value
+export const ThemeProvider = ({ children }) => {
+  const [theme, setTheme] = useState('light'); // Default theme is light
+
+  const toggleTheme = () => setTheme((prevTheme) => (prevTheme === 'light' ? 'dark' : 'light'));
+
+  return (
+    <ThemeContext.Provider value={{ theme, toggleTheme }}>
+      {children}
+    </ThemeContext.Provider>
+  );
+};
+
+// Component that uses the theme value
+const ThemedComponent = () => {
+  const { theme, toggleTheme } = useTheme();
+  return (
+    <div style={{ background: theme === 'light' ? '#fff' : '#333', color: theme === 'light' ? '#000' : '#fff' }}>
+      <p>The current theme is {theme}</p>
+      <button onClick={toggleTheme}>Toggle Theme</button>
+    </div>
+  );
+};
+
+function App() {
+  return (
+    <ThemeProvider>
+      <ThemedComponent />
+    </ThemeProvider>
+  );
+}
+
+export default App;
+```
+
+##### **How it works:**
+- The `ThemeProvider` component provides the `theme` value and a `toggleTheme` method that can be accessed by any child component using `useTheme`.
+- `ThemedComponent` displays the current theme and provides a button to toggle between the themes. The theme value is shared globally across the entire component tree.
+
+---
+
+#### 5. **Principles of `useContext`:**
+
+1. **Context should be used for globally shared values**: Use `useContext` when you have values that need to be shared globally across your component tree (e.g., user authentication, theme, language settings).
+2. **Avoid overuse**: Context is powerful, but overusing it for every state or small value can lead to unnecessary re-renders. Consider using `useState` or `useReducer` for local or complex state management.
+3. **Single Source of Truth**: The value provided by `Context.Provider` serves as the single source of truth for the data. It’s important to keep the context values consistent throughout your app.
+4. **UseContext simplifies state sharing**: With `useContext`, you can avoid prop drilling and share state in a clean, maintainable way.
+
+---
+
+### **💡 Interview Tip:**
+
+- **Explain when to use `useContext`**: In an interview, focus on scenarios where you need to share state or data across many components without having to pass props through intermediate levels.
+- **Discuss limitations**: While `useContext` is a great tool, it’s not always the best choice for large-scale state management. If your app requires complex state transitions, consider using `useReducer` or a global state management solution like Redux.
+- **Use examples**: Practical examples like authentication, theme switching, or language preference will help demonstrate how `useContext` simplifies state management.
+
+---
+
+### **Summary:**
+
+- **`useContext`** is a hook that allows you to consume values from a context, making it easy to share global data across components.
+- The **Context API** provides a way to pass data deeply through the component tree without prop drilling.
+- Use `useContext` for **global state management** (e.g., user authentication, theme settings, etc.) in your app.
+- It simplifies state sharing across components and is perfect for managing shared values in React applications.
+
+With `useContext`, you can effectively share global state with minimal overhead and avoid the complexity of prop drilling, making your React code cleaner and more maintainable.
+
+
+
+
+
+
+### **What Are Custom Hooks in React and How Can They Help in Creating and Reusing Logic?**
+
+---
+
+#### 1. **What is a Custom Hook?**
+
+A **custom hook** in React is a function that allows you to **extract and reuse logic** from components. Custom hooks allow you to share reusable stateful logic across multiple components in a cleaner and more maintainable way, while keeping the component code focused on its rendering logic.
+
+Custom hooks are simply JavaScript functions whose names begin with `use` (following React’s convention for hooks), and they can use other hooks like `useState`, `useEffect`, `useContext`, etc., to implement reusable logic.
+
+##### **Why is it important?**
+- Custom hooks help to **encapsulate logic** so that the same logic can be reused in different components without duplication.
+- They help keep components **clean and readable** by separating concerns such as data fetching, form handling, etc., into small, manageable functions.
+- They allow developers to **abstract complex logic** that would otherwise clutter component code.
+
+---
+
+#### 2. **How to Create a Custom Hook?**
+
+A custom hook follows the same rules as built-in hooks, i.e., it must start with the word `use` and can use other hooks internally to manage state, side effects, or context. 
+
+Here is the basic structure of a custom hook:
+
+```javascript
+function useCustomHook() {
+  // Hook logic here
+  const [state, setState] = useState(initialValue);
+
+  useEffect(() => {
+    // Side effect logic here
+  }, []);
+
+  return state;
+}
+```
+
+---
+
+#### 3. **Real-World Example: Creating a Custom Hook for Data Fetching**
+
+Let’s create a custom hook that fetches data from an API and returns the data along with loading and error states. This will help you reuse data-fetching logic across multiple components.
+
+##### **Step 1: Create the Custom Hook `useFetch`**
+
+```javascript
+import { useState, useEffect } from 'react';
+
+function useFetch(url) {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    // Fetch data from the API
+    const fetchData = async () => {
+      try {
+        const response = await fetch(url);
+        const result = await response.json();
+        setData(result);
+      } catch (err) {
+        setError(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [url]); // Re-run the effect if the URL changes
+
+  return { data, loading, error };
+}
+
+export default useFetch;
+```
+
+##### **How It Works:**
+- **State Management**: The `useFetch` hook uses `useState` to manage `data`, `loading`, and `error` states.
+- **Fetching Data**: Inside `useEffect`, it fetches data from the provided `url`. The data is stored in `data`, and if there is an error, it’s saved in the `error` state. Once the data is fetched, `loading` is set to `false`.
+- **Reusability**: The hook can now be used in any component where you need to fetch data, just by passing the `url` as an argument.
+
+---
+
+##### **Step 2: Using the Custom Hook in a Component**
+
+Now that we have the custom hook `useFetch`, we can use it in a component to fetch data from an API and display it.
+
+```javascript
+import React from 'react';
+import useFetch from './useFetch'; // Import the custom hook
+
+function UserList() {
+  const { data, loading, error } = useFetch('https://jsonplaceholder.typicode.com/users'); // Pass the API URL
+
+  if (loading) return <div>Loading...</div>;  // Show loading message
+  if (error) return <div>Error: {error.message}</div>;  // Show error message
+
+  return (
+    <div>
+      <h1>User List</h1>
+      <ul>
+        {data.map((user) => (
+          <li key={user.id}>{user.name}</li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+export default UserList;
+```
+
+##### **How it works:**
+- The `useFetch` hook is called with the API URL (`https://jsonplaceholder.typicode.com/users` in this case).
+- The hook returns `data`, `loading`, and `error`. The component renders:
+  - A loading message while data is being fetched.
+  - An error message if there’s an error in the fetch request.
+  - A list of users once the data is successfully fetched.
+
+---
+
+#### 4. **Why Should You Use Custom Hooks?**
+
+Here are some key reasons to use custom hooks:
+
+1. **Reusability**: The logic inside custom hooks can be reused across multiple components without duplicating the code.
+   
+2. **Cleaner Code**: Custom hooks allow you to split complex logic into separate files, which keeps your components clean and easier to manage.
+
+3. **Encapsulation of Logic**: You can abstract away complex logic such as data fetching, form validation, or state management into custom hooks, making your components focus more on UI.
+
+4. **Improved Testing**: Custom hooks can be easily tested separately from the components, making unit tests more focused and easier to write.
+
+---
+
+#### 5. **Real-World Scenario: Form Handling with Custom Hook**
+
+Let’s now create another custom hook for **form handling**. This custom hook can be used in multiple forms across your application to handle form inputs and validation.
+
+##### **Step 1: Create a Custom Hook for Form Handling**
+
+```javascript
+import { useState } from 'react';
+
+function useForm(initialState) {
+  const [formState, setFormState] = useState(initialState);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormState((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const resetForm = () => {
+    setFormState(initialState);
+  };
+
+  return { formState, handleChange, resetForm };
+}
+
+export default useForm;
+```
+
+##### **How It Works:**
+- **State Management**: The `useForm` hook keeps track of form input states in `formState`.
+- **Handle Change**: The `handleChange` function updates the `formState` whenever an input field changes.
+- **Reset Form**: The `resetForm` function resets the form to its initial state.
+
+---
+
+##### **Step 2: Using the Custom Hook in a Component**
+
+Now, let’s use `useForm` in a component to manage form inputs.
+
+```javascript
+import React from 'react';
+import useForm from './useForm'; // Import the custom hook
+
+function ContactForm() {
+  const { formState, handleChange, resetForm } = useForm({ name: '', email: '' });
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log('Form submitted:', formState);
+    resetForm();  // Reset form after submission
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <div>
+        <label>Name:</label>
+        <input
+          type="text"
+          name="name"
+          value={formState.name}
+          onChange={handleChange}
+        />
+      </div>
+      <div>
+        <label>Email:</label>
+        <input
+          type="email"
+          name="email"
+          value={formState.email}
+          onChange={handleChange}
+        />
+      </div>
+      <button type="submit">Submit</button>
+    </form>
+  );
+}
+
+export default ContactForm;
+```
+
+##### **How It Works:**
+- The form inputs are controlled using the `useForm` hook, which maintains the input values in `formState`.
+- When the form is submitted, it logs the form data and resets the form using the `resetForm` function.
+
+---
+
+#### 6. **Principles of Custom Hooks:**
+
+1. **Start with `use`**: Custom hooks must follow the naming convention of starting with `use` (e.g., `useFetch`, `useForm`).
+2. **Separation of Concerns**: Custom hooks should encapsulate logic that can be reused across components, keeping the component code clean and focused on UI rendering.
+3. **Keep It Simple**: Keep the custom hook focused on one piece of reusable logic (e.g., form handling, data fetching, etc.).
+4. **Use Built-In Hooks**: Custom hooks can use React’s built-in hooks like `useState`, `useEffect`, `useRef`, etc., to manage state and side effects.
+
+---
+
+### **💡 Interview Tip:**
+
+- In interviews, highlight the reusability and cleaner code that custom hooks bring to a project. Demonstrate your ability to abstract common logic and separate concerns into manageable pieces.
+- Emphasize how custom hooks improve maintainability and code quality, especially in large applications.
+
+---
+
+### **Summary:**
+
+- **Custom Hooks** allow you to create reusable, encapsulated logic that can be shared across multiple components.
+- They help to separate concerns, keep components clean, and avoid code duplication.
+- Common use cases include **data fetching**, **form handling**, and **state management**.
+- Custom hooks promote **maintainability**, **readability**, and **testability** of React applications.
+
+With custom hooks, your application becomes easier to scale and maintain while ensuring clean, efficient code.
+
+
+
+
+
+
+
+### **What Are Closures and Lexical Scope in JavaScript?**
+
+---
+
+#### 1. **What is a Closure in JavaScript?**
+
+A **closure** in JavaScript is a function that **retains access to its lexical scope** (variables from the outer function) even after the outer function has finished executing. This means that the inner function can still access and manipulate variables from its surrounding environment, even though the outer function has already returned.
+
+##### **Why is it important?**
+Closures are essential for:
+- **Data encapsulation**: You can hide variables from the global scope and only expose specific functions.
+- **Maintaining state**: Closures allow functions to maintain state across multiple calls.
+- **Callback functions**: Closures are often used in asynchronous operations or callbacks, where the inner function needs to remember variables from the outer function.
+
+---
+
+#### 2. **What is Lexical Scope?**
+
+**Lexical scope** refers to the **scope that is determined at the time the function is defined**, rather than when it is executed. In JavaScript, this means that a function's scope is determined by its position in the code, and it can access variables that are within its surrounding or outer functions.
+
+- **Lexical scope** helps determine which variables are accessible to a function when it is called. 
+- Functions are **lexically scoped** to the environment in which they are declared, meaning they can access all the variables and functions in their scope chain.
+
+---
+
+#### 3. **How Does Lexical Scope Work with Closures?**
+
+When you define a function inside another function (creating a closure), the inner function gets access to the outer function's variables due to lexical scoping. Even when the outer function finishes execution, the inner function retains access to these variables.
+
+---
+
+#### 4. **Real-World Example: Understanding Closures**
+
+Let’s look at a real-world example to understand closures better.
+
+##### **Example 1: Simple Closure**
+
+```javascript
+function outerFunction() {
+  let outerVariable = "I am outside!";
+
+  function innerFunction() {
+    console.log(outerVariable);  // innerFunction has access to outerVariable
+  }
+
+  return innerFunction;  // Returning the inner function
+}
+
+const closureExample = outerFunction(); // outerFunction has executed, but closureExample still has access to outerVariable
+closureExample();  // Output: "I am outside!"
+```
+
+##### **How It Works:**
+- `outerFunction` creates a local variable `outerVariable` and a function `innerFunction`.
+- Even after `outerFunction` finishes executing, `innerFunction` (which is returned) still has access to `outerVariable` because of the closure.
+- The closure retains access to variables from its **lexical scope** (the scope in which it was created).
+
+---
+
+#### 5. **Real-World Example: Counter with Closure**
+
+Here’s an example where closures help maintain state across multiple function calls:
+
+```javascript
+function createCounter() {
+  let count = 0;  // `count` is in the closure's lexical scope
+
+  return function() {
+    count += 1;
+    console.log(count);
+  };
+}
+
+const counter1 = createCounter(); // Returns a closure with access to `count`
+const counter2 = createCounter(); // Another closure with its own `count`
+
+counter1();  // Output: 1
+counter1();  // Output: 2
+
+counter2();  // Output: 1 (a new closure, with its own count)
+counter2();  // Output: 2
+```
+
+##### **How It Works:**
+- `createCounter` creates a counter that starts at `0` and increments every time the returned function is called.
+- Each call to `createCounter` returns a **new closure**. The closure retains access to its own `count` variable, which is why `counter1` and `counter2` have separate states.
+- Even though `createCounter` has finished executing, the closures (i.e., the inner functions) still have access to the `count` variable due to **lexical scoping**.
+
+---
+
+#### 6. **Why Do Closures Matter?**
+
+Closures are extremely useful in various situations, such as:
+1. **Data Encapsulation**: By using closures, we can create private variables that cannot be accessed directly from outside the function.
+2. **Function Factories**: Closures allow us to create functions dynamically with their own private states (like the counter example above).
+3. **Event Handlers and Callbacks**: Closures are used in asynchronous operations, like event handlers or `setTimeout`, where the callback needs to remember the data from the outer function.
+
+---
+
+#### 7. **Practical Example: Private Data with Closures**
+
+Closures can help us simulate private data by keeping variables from being accessed directly by code outside of the closure:
+
+```javascript
+function createPerson(name, age) {
+  let _name = name;  // Private variable
+  let _age = age;    // Private variable
+
+  return {
+    getName: function() {
+      return _name;
+    },
+    getAge: function() {
+      return _age;
+    },
+    setName: function(newName) {
+      _name = newName;
+    },
+    setAge: function(newAge) {
+      _age = newAge;
+    }
+  };
+}
+
+const person = createPerson("John", 25);
+console.log(person.getName());  // Output: John
+console.log(person.getAge());   // Output: 25
+
+person.setName("Jane");
+person.setAge(30);
+
+console.log(person.getName());  // Output: Jane
+console.log(person.getAge());   // Output: 30
+```
+
+##### **How It Works:**
+- The `createPerson` function returns an object with methods that allow controlled access to private data (`_name` and `_age`).
+- These variables are not directly accessible from the outside world but can be accessed and modified using the getter and setter methods. This is possible due to closures maintaining access to the variables.
+
+---
+
+#### 8. **Important Points About Closures:**
+- Closures allow functions to **remember their lexical environment** even after the outer function has returned.
+- They are commonly used in situations where you need to **preserve state** across function calls, such as event handling or asynchronous programming.
+- **Garbage Collection**: Since closures retain references to their outer variables, they can delay garbage collection until the closure is no longer needed.
+
+---
+
+### **💡 Interview Tip:**
+
+When answering closure-related questions in interviews, explain how closures allow for **data encapsulation** and **state preservation**. Provide simple, relatable examples like the **counter** or **private data** examples above to demonstrate their real-world application. Emphasize that closures can make your code more modular, reusable, and maintainable, especially when used for **function factories** or **private methods**.
+
+---
+
+### **Summary:**
+
+- **Closures** in JavaScript allow a function to remember its surrounding environment (lexical scope) even after the outer function has finished execution.
+- **Lexical scope** determines the accessibility of variables based on the location where a function is declared, not where it is executed.
+- Closures are useful for **data encapsulation**, **preserving state**, and creating **private variables** or **function factories**.
+- Mastering closures is essential for writing **clean**, **modular**, and **maintainable code** in JavaScript.
+
+
+
+
+
+### **What is OOPS (Object-Oriented Programming) in JavaScript?**
+
+---
+
+#### 1. **Introduction to OOPS**
+
+**Object-Oriented Programming (OOPS)** is a programming paradigm based on the concept of "objects," which can contain data in the form of **fields** (also known as **attributes** or **properties**) and **methods** (functions or procedures that manipulate the data). 
+
+In simpler terms, OOPS helps you organize your code by grouping related data and behaviors together into **objects** that interact with one another.
+
+---
+
+#### 2. **Core Principles of OOPS**
+
+OOPS has **four main principles** that help in organizing and structuring your code in an efficient and reusable manner. These principles are:
+
+1. **Encapsulation**
+2. **Abstraction**
+3. **Inheritance**
+4. **Polymorphism**
+
+Let’s break them down one by one with real-world analogies and examples:
+
+---
+
+#### 3. **Encapsulation: Protecting Data**
+
+- **What is Encapsulation?**
+  Encapsulation refers to the concept of **bundling data** (variables) and methods (functions) that operate on the data into a single unit, i.e., the object. It also helps to **restrict access** to some of the object's components to prevent unintended interference and misuse.
+
+- **Real-World Example:**
+  Think of a **remote control**. The buttons on the remote are the **methods** (functions) that let you interact with the TV, and the inside components of the remote (such as the battery or wiring) are **hidden** from the user. You don’t need to know how the remote works inside, only how to press buttons to get the TV to do what you want.
+
+- **In Code (Encapsulation Example):**
+  
+  ```javascript
+  class Car {
+    constructor(make, model) {
+      this.make = make;
+      this.model = model;
+      this._engineStatus = false;  // private variable
+    }
+
+    startEngine() {
+      this._engineStatus = true;
+      console.log('Engine started.');
+    }
+
+    stopEngine() {
+      this._engineStatus = false;
+      console.log('Engine stopped.');
+    }
+
+    getEngineStatus() {
+      return this._engineStatus;
+    }
+  }
+
+  const myCar = new Car('Toyota', 'Camry');
+  myCar.startEngine();   // Engine started.
+  console.log(myCar.getEngineStatus());  // true
+  ```
+
+  In this example:
+  - **Encapsulation** is used to hide the internal workings of the car's engine (`_engineStatus`) from direct access. We can only interact with it via methods (`startEngine`, `stopEngine`), ensuring controlled access to the car's engine status.
+
+---
+
+#### 4. **Abstraction: Hiding Complex Details**
+
+- **What is Abstraction?**
+  Abstraction is the concept of **hiding the complex implementation details** and only exposing the essential features of an object. It helps in simplifying complex systems by showing only the necessary information to the user.
+
+- **Real-World Example:**
+  When you use a **smartphone**, you don’t need to understand how the hardware or software works. You only need to know how to use the touchscreen to interact with apps. The **interface** (the screen, buttons) abstracts the complexity of the device’s internal workings.
+
+- **In Code (Abstraction Example):**
+
+  ```javascript
+  class Shape {
+    constructor(name) {
+      this.name = name;
+    }
+
+    // Abstract method, to be implemented by subclasses
+    draw() {
+      throw "Method 'draw()' must be implemented.";
+    }
+  }
+
+  class Circle extends Shape {
+    constructor(radius) {
+      super("Circle");
+      this.radius = radius;
+    }
+
+    draw() {
+      console.log(`Drawing a circle with radius ${this.radius}`);
+    }
+  }
+
+  class Square extends Shape {
+    constructor(side) {
+      super("Square");
+      this.side = side;
+    }
+
+    draw() {
+      console.log(`Drawing a square with side ${this.side}`);
+    }
+  }
+
+  const circle = new Circle(10);
+  const square = new Square(5);
+
+  circle.draw();  // Drawing a circle with radius 10
+  square.draw();  // Drawing a square with side 5
+  ```
+
+  In this example:
+  - **Abstraction** allows us to define a `Shape` class with a common method (`draw`) that is not implemented directly, but is instead implemented in the subclasses (`Circle` and `Square`). This hides the complexity of the drawing process and provides a clean interface for users.
+
+---
+
+#### 5. **Inheritance: Reusing Code**
+
+- **What is Inheritance?**
+  Inheritance is the concept of one class **inheriting** the properties and methods of another class. It allows for **code reuse** and the creation of a hierarchical relationship between classes. In JavaScript, this is achieved using the `extends` keyword.
+
+- **Real-World Example:**
+  Think of a **child inheriting traits** from their parents. For example, a child might inherit their parent’s eye color and height, but also have their own unique traits. The child class gets the properties of the parent class and can add its own unique properties.
+
+- **In Code (Inheritance Example):**
+
+  ```javascript
+  class Animal {
+    constructor(name) {
+      this.name = name;
+    }
+
+    speak() {
+      console.log(`${this.name} makes a sound.`);
+    }
+  }
+
+  class Dog extends Animal {
+    constructor(name, breed) {
+      super(name);
+      this.breed = breed;
+    }
+
+    speak() {
+      console.log(`${this.name} barks.`);
+    }
+  }
+
+  const myDog = new Dog('Rex', 'Golden Retriever');
+  myDog.speak();  // Rex barks.
+  ```
+
+  In this example:
+  - The `Dog` class **inherits** from the `Animal` class. It **reuses** the `name` property and the `speak` method, but it can also define its own version of the `speak` method (overriding the parent class method).
+  
+---
+
+#### 6. **Polymorphism: One Interface, Multiple Implementations**
+
+- **What is Polymorphism?**
+  Polymorphism allows objects to be treated as instances of their parent class, but each subclass can have its own specific implementation of methods. This allows for **flexibility** in how different objects behave, despite sharing the same interface.
+
+- **Real-World Example:**
+  Think about a **printer**. Different types of printers (laser, inkjet, 3D) can all have a `print` method. Each printer uses the `print` method differently based on its type. However, we can call `print` on any printer, regardless of the type.
+
+- **In Code (Polymorphism Example):**
+
+  ```javascript
+  class Animal {
+    speak() {
+      console.log("Animal makes a sound.");
+    }
+  }
+
+  class Dog extends Animal {
+    speak() {
+      console.log("Dog barks.");
+    }
+  }
+
+  class Cat extends Animal {
+    speak() {
+      console.log("Cat meows.");
+    }
+  }
+
+  const animals = [new Dog(), new Cat()];
+
+  animals.forEach(animal => animal.speak());
+  // Output: 
+  // Dog barks.
+  // Cat meows.
+  ```
+
+  In this example:
+  - **Polymorphism** allows the same `speak` method to behave differently based on the object type (`Dog` or `Cat`). Even though the `speak` method is called on different objects, each object implements it according to its own logic.
+
+---
+
+### **Real-World Use Case of OOPS:**
+
+#### **Example: Building a Simple E-commerce System**
+
+Let's say you’re building an e-commerce platform where customers can place orders for products. You can use OOPS to model this system effectively:
+
+1. **Encapsulation**: 
+   - Each `Product` has properties like `name`, `price`, and `quantity`, which can only be accessed through methods like `getPrice()` or `setQuantity()`.
+   - The `Order` class contains methods to add products and calculate the total price.
+
+2. **Abstraction**: 
+   - The `PaymentGateway` class may have an abstract `processPayment()` method, which could be implemented differently for `CreditCard` and `PayPal` subclasses.
+
+3. **Inheritance**:
+   - The `User` class can be a base class, and classes like `AdminUser` and `CustomerUser` can inherit from it. Admin users may have extra capabilities like managing the inventory, while customers can just place orders.
+
+4. **Polymorphism**:
+   - The `Order` class can have a `finalizeOrder()` method that behaves differently based on whether the payment is processed through `CreditCard` or `PayPal`.
+
+---
+
+### **💡 Interview Tip:**
+
+When asked about OOPS, always explain the principles with **real-life examples** like cars, printers, and animals. Highlight how OOPS makes your code **modular**, **reusable**, and **maintainable**. Be sure to **show understanding** of each principle and **provide concrete examples** to demonstrate how they work together.
+
+---
+
+### **Summary:**
+- **Encapsulation**: Keeps data safe inside objects, exposing only what's necessary.
+- **Abstraction**: Hides complexity and shows only the essential features.
+- **Inheritance**: Reuses code by creating a parent-child relationship between classes.
+- **Polymorphism**: Allows the same method to behave differently across different objects.
+
+OOPS in JavaScript helps developers to create structured, scalable, and reusable code that is easy to maintain and extend, which is particularly useful in larger applications.
