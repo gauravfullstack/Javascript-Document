@@ -2085,3 +2085,259 @@ task
 ```
 
 ---
+
+### **Difficult Questions on `map()`, `filter()`, and `reduce()`**
+
+---
+
+### **1. Transform an array of objects using `map()`**
+
+Given an array of objects representing employees, use `map()` to transform the data into an array of strings where each string contains the employee's name and their department.
+
+```javascript
+const employees = [
+    { id: 1, name: 'Alice', department: 'HR' },
+    { id: 2, name: 'Bob', department: 'Engineering' },
+    { id: 3, name: 'Charlie', department: 'Sales' }
+];
+
+// Expected Output:
+// ["Alice from HR", "Bob from Engineering", "Charlie from Sales"]
+```
+
+---
+
+### **2. Filter out items from an array based on a condition**
+
+Given an array of objects representing books, use `filter()` to create a new array with books that have a rating of 4 or higher.
+
+```javascript
+const books = [
+    { title: 'Book 1', rating: 4.2 },
+    { title: 'Book 2', rating: 3.8 },
+    { title: 'Book 3', rating: 5.0 },
+    { title: 'Book 4', rating: 2.5 }
+];
+
+// Expected Output:
+// [{ title: 'Book 1', rating: 4.2 }, { title: 'Book 3', rating: 5.0 }]
+```
+
+---
+
+### **3. Combine `map()` and `filter()` to process an array of objects**
+
+You have an array of products, each product has a `price` and `category`. Use `map()` to increase the price of all products by 10%, and then use `filter()` to return only those products in the `Electronics` category.
+
+```javascript
+const products = [
+    { id: 1, name: 'Laptop', category: 'Electronics', price: 1000 },
+    { id: 2, name: 'Shirt', category: 'Clothing', price: 30 },
+    { id: 3, name: 'Headphones', category: 'Electronics', price: 200 },
+    { id: 4, name: 'Book', category: 'Education', price: 15 }
+];
+
+// Expected Output:
+// [{ id: 1, name: 'Laptop', category: 'Electronics', price: 1100 },
+//  { id: 3, name: 'Headphones', category: 'Electronics', price: 220 }]
+```
+
+---
+
+### **4. Use `reduce()` to count frequency of elements in an array**
+
+Given an array of strings, use `reduce()` to count how many times each word appears in the array. Return an object where the keys are the words, and the values are their frequency count.
+
+```javascript
+const words = ['apple', 'banana', 'apple', 'orange', 'banana', 'apple'];
+
+// Expected Output:
+// { apple: 3, banana: 2, orange: 1 }
+```
+
+---
+
+### **5. Implement a `flatten()` function using `reduce()`**
+
+Given a nested array, use `reduce()` to flatten the array into a single-level array.
+
+```javascript
+const nestedArray = [1, [2, 3], [4, [5, 6]]];
+
+// Expected Output:
+// [1, 2, 3, 4, 5, 6]
+```
+
+---
+
+### **6. Use `map()` to create an array of nested objects**
+
+Given an array of numbers, use `map()` to create a new array of objects where each object contains the number and its square.
+
+```javascript
+const numbers = [1, 2, 3, 4, 5];
+
+// Expected Output:
+// [{ number: 1, square: 1 }, { number: 2, square: 4 }, { number: 3, square: 9 }, { number: 4, square: 16 }, { number: 5, square: 25 }]
+```
+
+---
+
+### **7. Use `reduce()` to group objects by a property**
+
+You have an array of objects representing people, each person has a `name` and `age`. Use `reduce()` to group the people by their age.
+
+```javascript
+const people = [
+    { name: 'Alice', age: 25 },
+    { name: 'Bob', age: 30 },
+    { name: 'Charlie', age: 25 },
+    { name: 'David', age: 30 }
+];
+
+// Expected Output:
+// {
+//   25: [{ name: 'Alice', age: 25 }, { name: 'Charlie', age: 25 }],
+//   30: [{ name: 'Bob', age: 30 }, { name: 'David', age: 30 }]
+// }
+```
+
+---
+
+### **8. Combine `map()` and `reduce()` to transform and accumulate data**
+
+Given an array of objects where each object represents a product, use `map()` to apply a 15% discount to each product's price, and then use `reduce()` to calculate the total price of all products after the discount.
+
+```javascript
+const products = [
+    { id: 1, name: 'Laptop', price: 1000 },
+    { id: 2, name: 'Phone', price: 500 },
+    { id: 3, name: 'Tablet', price: 300 }
+];
+
+// Expected Output:
+// Total price after discount: 1680
+```
+
+---
+
+### **9. Use `map()` and `filter()` to manipulate an array of mixed data types**
+
+Given an array that contains both numbers and strings, use `map()` to convert all numbers to strings, and then use `filter()` to keep only the items that are not equal to "0".
+
+```javascript
+const mixedData = [1, '2', 3, '0', '5', 0];
+
+// Expected Output:
+// ['1', '2', '3', '5']
+```
+
+---
+
+### **10. Use `reduce()` to create a cumulative sum of an array**
+
+Given an array of numbers, use `reduce()` to calculate the cumulative sum of the array. The output should be an array where each element is the sum of all elements up to that index.
+
+```javascript
+const numbers = [1, 2, 3, 4, 5];
+
+// Expected Output:
+// [1, 3, 6, 10, 15]
+```
+
+---
+
+### **11. Use `map()` and `filter()` to transform and remove objects**
+
+Given an array of objects representing students, each object has `name`, `score`, and `passed` (boolean). Use `map()` to increase the score by 5 points for all students who passed, and then use `filter()` to only keep students with scores above 50.
+
+```javascript
+const students = [
+    { name: 'Alice', score: 45, passed: false },
+    { name: 'Bob', score: 55, passed: true },
+    { name: 'Charlie', score: 65, passed: true },
+    { name: 'David', score: 50, passed: true }
+];
+
+// Expected Output:
+// [{ name: 'Bob', score: 60, passed: true }, { name: 'Charlie', score: 70, passed: true }, { name: 'David', score: 55, passed: true }]
+```
+
+---
+
+### **12. Create a `deepClone()` function using `reduce()`**
+
+Write a function that deep clones an object using `reduce()` to iterate over the object's keys and values. The function should handle nested objects as well.
+
+```javascript
+const originalObj = {
+    a: 1,
+    b: {
+        c: 2,
+        d: 3
+    },
+    e: 4
+};
+
+// Expected Output:
+// { a: 1, b: { c: 2, d: 3 }, e: 4 }
+```
+
+---
+
+### **13. Use `map()` to calculate the sum of all numbers in an array of objects**
+
+Given an array of objects representing different users and their expenses, use `map()` to calculate the total sum of all expenses.
+
+```javascript
+const expenses = [
+    { user: 'Alice', amount: 100 },
+    { user: 'Bob', amount: 200 },
+    { user: 'Charlie', amount: 50 }
+];
+
+// Expected Output:
+// 350
+```
+
+---
+
+### **14. Group an array of objects by a dynamic key using `reduce()`**
+
+Given an array of objects representing products, each product has a `category` and `price`. Use `reduce()` to group the products by their `category` and calculate the total price for each category.
+
+```javascript
+const products = [
+    { name: 'Shampoo', category: 'Health', price: 5 },
+    { name: 'Toothpaste', category: 'Health', price: 3 },
+    { name: 'Laptop', category: 'Electronics', price: 1000 },
+    { name: 'Phone', category: 'Electronics', price: 500 }
+];
+
+// Expected Output:
+// {
+//   Health: { total: 8, products: [{ name: 'Shampoo', price: 5 }, { name: 'Toothpaste', price: 3 }] },
+//   Electronics: { total: 1500, products: [{ name: 'Laptop', price: 1000 }, { name: 'Phone', price: 500 }] }
+// }
+```
+
+---
+
+### **15. Use `map()` and `reduce()` to find the highest priced product in each category**
+
+Given an array of products, where each product has a `category` and a `price`, use `map()` to extract the prices for each category, and then use `reduce()` to find the highest priced product in each category.
+
+```javascript
+const products = [
+    { name: 'Shampoo', category: 'Health', price: 5 },
+    { name: 'Toothpaste', category: 'Health', price: 3 },
+    { name: 'Laptop', category: 'Electronics', price: 1000 },
+    { name: 'Phone', category: 'Electronics', price: 500 },
+    { name: 'TV', category: 'Electronics', price: 1200 }
+];
+
+// Expected Output:
+// { Health: 5, Electronics: 1200 }
+```
+
+---
