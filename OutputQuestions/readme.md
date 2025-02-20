@@ -1,3 +1,41 @@
+Here’s a set of **25 new practice questions** focused on **arrays**, **strings**, and **objects**, designed to help you get more comfortable with these concepts!
+
+### **Arrays (10 Questions)**  
+1. Create an array of 6 different fruits and log it.  
+2. Access the third element of an array and log it.  
+3. Use `.push()` to add a new element to the end of an array.  
+4. Use `.pop()` to remove the last element of an array and log the updated array.  
+5. Write a program to create a sub-array of elements from index 2 to 5.  
+6. Reverse an array without using `.reverse()` method.  
+7. Use `.filter()` to create a new array of only even numbers from the array [1, 2, 3, 4, 5, 6].  
+8. Write a function that accepts an array and returns the average of its elements.  
+9. Combine two arrays `[7, 8, 9]` and `[10, 11]` using the spread operator.  
+10. Write a program that checks if two arrays are identical.
+
+### **Strings (10 Questions)**  
+11. Write a program that accepts a string and logs its length.  
+12. Create a function that checks if a string contains the word “JavaScript”.  
+13. Write a program that converts a string to uppercase.  
+14. Create a function that accepts a string and returns the number of vowels in it.  
+15. Use `.split()` to convert a string `"apple,banana,orange"` into an array.  
+16. Write a program that reverses a string without using the `.reverse()` method.  
+17. Create a function that removes all spaces from a string.  
+18. Check if a string is a palindrome (reads the same forward and backward).  
+19. Create a function that returns the first letter of each word in a string.  
+20. Write a program that replaces all occurrences of "cat" with "dog" in a string.
+
+### **Objects (5 Questions)**  
+21. Create an object to represent a book with properties like `title`, `author`, and `pages`. Log the object.  
+22. Write a program that changes the value of a property in an object.  
+23. Write a function that accepts an object and logs all its keys.  
+24. Create an object representing a car and then add a `color` property to it.  
+25. Write a function that checks if an object has a specific property and logs a message based on the result.  
+
+Would you like to dive into any of these with step-by-step solutions or more detailed explanations?
+
+
+
+
 
 ---
 
