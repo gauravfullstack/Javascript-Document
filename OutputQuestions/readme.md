@@ -160,21 +160,25 @@ a();
 ### **Question 6: `call`, `apply`, and `bind`**
 
 ```javascript
-function greet(name) {
-    console.log(`Hello, ${name}`);
-}
-
-const person = {
-    name: 'John'
+const obj1 = {
+    name: "John",
+    surname: "Singh",
+    getName: function (s) {
+        console.log(this.name, s);
+    },
 };
 
-greet.call(person, 'Mike');
-greet.apply(person, ['Sarah']);
-const greetBound = greet.bind(person, 'Alice');
-greetBound();
-```
+const obj2 = {
+    name: "Doe",
+    age: 30,
+};
 
-**What will be the output of this code and why? Explain the difference between `call`, `apply`, and `bind` in this context.**
+obj1.getName("Haarami2");
+obj1.getName.call(obj2, "Haarami2");
+obj1.getName.apply(obj2, ["Haarami3", "asd"]);
+const special = obj1.getName.bind(obj2, "Haarami45");
+special();
+```
 
 ---
 
