@@ -905,6 +905,7 @@ export default Header;
 
 ---
 
+
 ## **4. How Does This Work?**
 
 1. **Create Context**: The `ThemeContext` is created using `React.createContext()`, with a default value of `'light'`.
